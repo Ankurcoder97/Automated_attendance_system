@@ -6,8 +6,8 @@ pandas
 
 # Face Recognition
 scikit-learn
-dlib-bin
-git+https://github.com/ageitgey/face_recognition_models
+# dlib-bin
+# git+https://github.com/ageitgey/face_recognition_models
 
 # Supabase
 supabase>=2.0.0
@@ -18,5 +18,5 @@ segno
 pillow
 
 # Audio
-librosa
-resemblyzer
+#librosa
+#resemblyzer
