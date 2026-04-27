@@ -13,7 +13,7 @@ import time
 
 from src.components.dialog_enroll import enroll_dialog
 from src.components.subject_card import subject_card
-a = 1
+
 def student_dashboard():
     student_data = st.session_state.student_data
     student_id = student_data['student_id']
@@ -66,11 +66,10 @@ def student_dashboard():
 
 
         stats = stats_map.get(sid,{"total":0, "attended": 0} )
-        def unenroll_button(sub,student_id):
-                if st.button("Unenroll from tihs course", type='tertiary', width='stretch',key=f"unenroll_{student_id}_{sid}", icon=':material/delete_forever:'):
+        def unenroll_button():
+                if st.button("Unenroll from tihs course", type='tertiary', width='stretch', icon=':material/delete_forever:'):
                     unenroll_student_to_subject(student_id, sid)
-                    
-                    st.toast(f"Unenrolled from {sub['name']} successfully!")
+                    st.toast(f'Unenrolled from {sub['name']} successfully!')
                     st.rerun()
 
         with cols[i % 2]:
@@ -83,10 +82,8 @@ def student_dashboard():
                     ('📅', 'Total', stats['total']),
                     ('✅', 'Attended', stats['attended']),
                 ],
-                # footer_callback=unenroll_button(subjects,sid)
-                footer_callback=None
+                footer_callback=unenroll_button
             )
-            unenroll_button(sub, student_id)
     footer_dashboard()
 
 
@@ -136,7 +133,7 @@ def student_screen():
                         st.session_state.is_logged_in = True
                         st.session_state.user_role = 'student'
                         st.session_state.student_data = student
-                        st.toast(f"Welcome Back {student['name']}")
+                        st.toast(f'Welcome Back {student['name']}')
                         time.sleep(1)
                         st.rerun()
                 else:
@@ -145,7 +142,7 @@ def student_screen():
     if show_registration:
         with st.container(border=True):
             st.header('Register new Profile')
-            new_name = st.text_input("Enter your name", placeholder='E.g. Ankur Banerjee')
+            new_name = st.text_input("Enter your name", placeholder='E.g. Hamza Rizvi')
 
             st.subheader('Optional : Voice Enrollment')
             st.info("Enroll your for voice only attendance")
@@ -177,7 +174,7 @@ def student_screen():
                                 st.session_state.is_logged_in = True
                                 st.session_state.user_role = 'student'
                                 st.session_state.student_data = response_data[0]
-                                st.toast(f"Profile Created! Hi {new_name}!")
+                                st.toast(f'Profile Created! Hi {new_name}!')
                                 time.sleep(1)
                                 st.rerun()
                         else:
