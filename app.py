@@ -8,7 +8,7 @@ import streamlit as st
 
 # ✅ Keep ONLY this test
 try:
-    from src.database.config import supabase
+    import supabase
     st.write("✅ Supabase is installed")
 except Exception as e:
     st.write("❌ Supabase NOT installed:", e)
