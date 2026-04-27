@@ -1,1 +1,2 @@
-requests
+streamlit
+supabase-py==2.4.0
