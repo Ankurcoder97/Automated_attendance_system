@@ -1,8 +1,6 @@
 from src.database.config import supabase
 import bcrypt
-from src.database.config import get_supabase
 
-supabase = get_supabase()
 
 
 def hash_pass(pwd):
