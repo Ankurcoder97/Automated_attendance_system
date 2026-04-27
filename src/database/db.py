@@ -1,4 +1,6 @@
-from src.database.config import supabase
+from src.database.config import get_supabase
+
+supabase = get_supabase()
 import bcrypt
 
 
