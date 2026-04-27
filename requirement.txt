@@ -1,22 +1,2 @@
 streamlit
-
-# Utilities
-numpy
-pandas
-
-# Face Recognition
-scikit-learn
-# dlib-bin
-# git+https://github.com/ageitgey/face_recognition_models
-
-# Supabase
 supabase>=2.0.0
-bcrypt
-
-# QR + Image
-segno
-pillow
-
-# Audio
-#librosa
-#resemblyzer
