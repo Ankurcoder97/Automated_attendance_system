@@ -9,11 +9,12 @@ def style_background_home():
                 background: #5865F2 !important;
             }
 
-            /* Better column selector for Streamlit Cloud */
+            /* Card style for each column */
             div[data-testid="column"] {
                 background-color: #E0E3FF !important;
-                padding: 2rem !important;
-                border-radius: 2rem !important;
+                padding: 2.5rem !important;
+                border-radius: 3rem !important;
+                text-align: center !important;
             }
 
         </style>
