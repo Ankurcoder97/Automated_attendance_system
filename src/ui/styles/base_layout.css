@@ -114,12 +114,32 @@ button:hover {
     transform: scale(1.05);
 }
 
-button *,
+button,
+button [data-testid="stMarkdownContainer"],
+button [data-testid="stMarkdownContainer"] p,
+button [data-testid="stMarkdownContainer"] span,
 button svg,
 button span,
 button p,
 button div {
     color: white !important;
+    -webkit-text-fill-color: white !important;
     fill: white !important;
     stroke: white !important;
+    opacity: 1 !important;
+}
+
+button[kind="tertiary"],
+button[kind="tertiary"] [data-testid="stMarkdownContainer"],
+button[kind="tertiary"] [data-testid="stMarkdownContainer"] p,
+button[kind="tertiary"] [data-testid="stMarkdownContainer"] span,
+button[kind="tertiary"] svg,
+button[kind="tertiary"] span,
+button[kind="tertiary"] p,
+button[kind="tertiary"] div {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    fill: white !important;
+    stroke: white !important;
+    opacity: 1 !important;
 }
