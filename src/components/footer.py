@@ -8,7 +8,7 @@ def footer_home():
         <p style="font-weight:bold; color:white;"> Created with ❤️ by Ankur </p>  
         </div>
                 
-                """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 
 def footer_dashboard():
