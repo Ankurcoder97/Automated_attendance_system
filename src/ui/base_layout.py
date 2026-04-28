@@ -1,3 +1,4 @@
+from html import escape
 from pathlib import Path
 
 import streamlit as st
@@ -50,3 +51,18 @@ def style_base_layout():
     css = _load_css()
     if css:
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+
+def render_heading(text: str, level: int = 1, color: str | None = None, align: str = "left"):
+    tag = f"h{min(max(level, 1), 4)}"
+    class_name = f"snap-{tag}"
+    style_parts = [f"text-align:{align}"]
+
+    if color:
+        style_parts.append(f"color:{color}")
+
+    safe_text = escape(text).replace("\n", "<br/>")
+    st.markdown(
+        f"<{tag} class='{class_name}' style='{'; '.join(style_parts)}'>{safe_text}</{tag}>",
+        unsafe_allow_html=True,
+    )

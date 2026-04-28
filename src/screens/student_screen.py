@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.ui.base_layout import style_background_dashboard, style_base_layout
+from src.ui.base_layout import render_heading, style_background_dashboard, style_base_layout
 
 from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
@@ -21,7 +21,7 @@ def student_dashboard():
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"""Welcome, {student_data['name']} """)
+        render_heading(f"Welcome, {student_data['name']}", level=3)
         if st.button("Logout", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
             st.session_state['is_logged_in'] = False
             del st.session_state.student_data 
@@ -32,7 +32,7 @@ def student_dashboard():
 
     c1, c2 =st.columns(2)
     with c1:
-        st.header('Your Enrolled Subjects')
+        render_heading('Your Enrolled Subjects', level=2)
     with c2:
         if st.button('Enroll in Subject', type='primary', width='stretch'):
             enroll_dialog()
@@ -106,7 +106,7 @@ def student_screen():
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.header('Login using FaceID', text_alignment='center')
+    render_heading('Login using FaceID', level=2, align='center')
     st.space()
     st.space()
     
@@ -141,10 +141,10 @@ def student_screen():
                     show_registration = True
     if show_registration:
         with st.container(border=True):
-            st.header('Register new Profile')
+            render_heading('Register new Profile', level=2)
             new_name = st.text_input("Enter your name", placeholder='E.g. Hamza Rizvi')
 
-            st.subheader('Optional : Voice Enrollment')
+            render_heading('Optional : Voice Enrollment', level=3)
             st.info("Enroll your for voice only attendance")
 
 

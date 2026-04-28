@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.ui.base_layout import style_background_dashboard, style_base_layout
+from src.ui.base_layout import render_heading, style_background_dashboard, style_base_layout
 
 from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
@@ -44,7 +44,7 @@ def teacher_dashboard():
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"""Welcome, {teacher_data['name']} """)
+        render_heading(f"Welcome, {teacher_data['name']}", level=3)
         if st.button("Logout", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
             st.session_state['is_logged_in'] = False
             del st.session_state.teacher_data 
@@ -93,7 +93,7 @@ def teacher_dashboard():
 
 def teacher_tab_take_attendance():
     teacher_id = st.session_state.teacher_data['teacher_id']
-    st.header('Take AI Attendance')
+    render_heading('Take AI Attendance', level=2)
 
 
     if 'attendance_images' not in st.session_state:
@@ -121,7 +121,7 @@ def teacher_tab_take_attendance():
     st.divider()
 
     if st.session_state.attendance_images:
-        st.header('Added Photos')
+        render_heading('Added Photos', level=2)
         gallery_cols = st.columns(4)
 
         for idx, img in enumerate(st.session_state.attendance_images):
@@ -204,7 +204,7 @@ def teacher_tab_manage_subjects():
     teacher_id = st.session_state.teacher_data['teacher_id']
     col1, col2 = st.columns(2)
     with col1:
-        st.header('Manage Subjects', width='stretch')
+        render_heading('Manage Subjects', level=2)
 
     with col2:
         if st.button('Create New Subject', width='stretch'):
@@ -236,7 +236,7 @@ def teacher_tab_manage_subjects():
 
 
 def teacher_tab_attendance_records():
-    st.header('Attendance Records')
+    render_heading('Attendance Records', level=2)
 
     teacher_id = st.session_state.teacher_data['teacher_id']
 
@@ -307,7 +307,7 @@ def teacher_screen_login():
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.header('Login using password', text_alignment='center')
+    render_heading('Login using password', level=2, align='center')
     st.space()
     st.space()
 
@@ -364,7 +364,7 @@ def teacher_screen_register():
 
 
 
-    st.header('Register your teacher profile')
+    render_heading('Register your teacher profile', level=2)
 
     st.space()
     st.space()

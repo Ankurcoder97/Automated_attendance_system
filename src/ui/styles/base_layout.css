@@ -1,6 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Climate+Crisis&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
+:root {
+    --snap-display-font: "Climate Crisis", "Arial Black", "Impact", sans-serif;
+    --snap-body-font: "Outfit", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
 /* Hide Streamlit chrome */
 #MainMenu,
 footer,
@@ -14,8 +19,10 @@ header {
 
 h1,
 [data-testid="stMarkdownContainer"] h1,
-[data-testid="stHeading"] h1 {
-    font-family: "Climate Crisis", sans-serif !important;
+[data-testid="stHeading"] h1,
+[data-testid="stHeadingWithActionElements"] h1,
+.snap-h1 {
+    font-family: var(--snap-display-font) !important;
     font-size: 3.5rem !important;
     line-height: 1.1 !important;
     margin-bottom: 0 !important;
@@ -23,8 +30,10 @@ h1,
 
 h2,
 [data-testid="stMarkdownContainer"] h2,
-[data-testid="stHeading"] h2 {
-    font-family: "Climate Crisis", sans-serif !important;
+[data-testid="stHeading"] h2,
+[data-testid="stHeadingWithActionElements"] h2,
+.snap-h2 {
+    font-family: var(--snap-display-font) !important;
     font-size: 2rem !important;
     line-height: 0.9 !important;
     margin-bottom: 0 !important;
@@ -37,8 +46,39 @@ p,
 [data-testid="stMarkdownContainer"] h4,
 [data-testid="stMarkdownContainer"] p,
 [data-testid="stHeading"] h3,
-[data-testid="stHeading"] h4 {
-    font-family: "Outfit", sans-serif !important;
+[data-testid="stHeading"] h4,
+[data-testid="stHeadingWithActionElements"] h3,
+[data-testid="stHeadingWithActionElements"] h4,
+.snap-h3,
+.snap-h4,
+.snap-body {
+    font-family: var(--snap-body-font) !important;
+}
+
+.snap-h1,
+.snap-h2,
+.snap-h3,
+.snap-h4 {
+    margin-top: 0 !important;
+}
+
+.snap-h3 {
+    font-size: 1.5rem !important;
+    line-height: 1.1 !important;
+}
+
+@media (max-width: 768px) {
+    .snap-h1 {
+        font-size: 2.6rem !important;
+    }
+
+    .snap-h2 {
+        font-size: 1.6rem !important;
+    }
+
+    .snap-h3 {
+        font-size: 1.2rem !important;
+    }
 }
 
 button {
