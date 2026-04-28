@@ -1,158 +1,163 @@
 import streamlit as st
 
 
-# -----------------------------
-# COMMON BASE STYLE (load once)
-# -----------------------------
+# -----------------------------------
+# BASE STYLE (SAFE VERSION)
+# -----------------------------------
 def style_base_layout():
-    st.markdown(
-        """
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+    st.markdown("""
+    <style>
 
-        /* Hide Streamlit default menu */
-        #MainMenu, footer, header {
-            visibility: hidden;
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Noto+Serif:wght@400;700&display=swap');
 
-        .block-container {
-            padding-top: 1.5rem !important;
-        }
+    /* Hide default Streamlit header */
+    #MainMenu, footer, header {
+        visibility: hidden;
+    }
 
-        /* Headings */
-        h1 {
-            font-family: 'Climate Crisis', sans-serif !important;
-            font-size: 3.5rem !important;
-            line-height: 0.9 !important;
-            margin-bottom: 0rem !important;
-            color: black !important;
-        }
+    .block-container {
+        padding-top: 1.5rem !important;
+    }
 
-        h2 {
-            font-family: 'Climate Crisis', sans-serif !important;
-            font-size: 2rem !important;
-            line-height: 0.9 !important;
-            margin-bottom: 0rem !important;
-            color: black !important;
-            letter-spacing: 2px !important;
-        }
+    /* ------------------------
+       SAFE CUSTOM CLASSES ONLY
+       ------------------------ */
 
-        .head h2 {
-            color: #5865F2 !important;
-        }
+    /* Main Title */
+    .main-title h1 {
+        font-family: 'Climate Crisis', sans-serif !important;
+        font-size: 3.5rem !important;
+        line-height: 0.9 !important;
+        margin: 0 !important;
+        color: black !important;
+    }
 
-        h3, h4, p {
-            font-family: 'Noto Serif', serif !important;
-            color: black !important;
-        }
+    /* Section Title */
+    .section-title h2 {
+        font-family: 'Climate Crisis', sans-serif !important;
+        font-size: 2rem !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        color: black !important;
+        letter-spacing: 2px !important;
+    }
 
-        /* Buttons */
-        .stButton > button {
-            border-radius: 1.5rem !important;
-            background: #5865F2 !important;
-            color: white !important;
-            padding: 10px 20px !important;
-            border: none !important;
-            transition: transform 0.25s ease-in-out !important;
-        }
+    /* Blue heading */
+    .blue-title h2 {
+        color: #5865F2 !important;
+    }
 
-        .stButton > button * {
-            color: white !important;
-        }
+    /* Normal text */
+    .normal-text p {
+        font-family: 'Noto Serif', serif !important;
+        color: black !important;
+        margin: 0 !important;
+    }
 
-        .stButton > button:hover {
-            transform: scale(1.05);
-        }
+    /* Home Card */
+    .home-card {
+        background: #E0E3FF !important;
+        padding: 2.5rem !important;
+        border-radius: 2rem !important;
+    }
 
-        /* Secondary button */
-        .stButton > button[kind="secondary"] {
-            background: #EB459E !important;
-        }
+    /* Popup Modal */
+    .popup-box {
+        background: #050816 !important;
+        padding: 2rem !important;
+        border-radius: 2rem !important;
+    }
 
-        /* Tertiary button */
-        .stButton > button[kind="tertiary"] {
-            background: black !important;
-        }
+    /* Popup title */
+    .popup-title h2 {
+        font-family: 'Climate Crisis', sans-serif !important;
+        font-size: 2rem !important;
+        color: white !important;
+        margin-bottom: 1rem !important;
+    }
 
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    /* Buttons */
+    .stButton > button {
+        border-radius: 1.5rem !important;
+        background: #5865F2 !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 24px !important;
+        transition: 0.2s ease !important;
+    }
+
+    .stButton > button:hover {
+        transform: scale(1.03);
+    }
+
+    .stButton > button * {
+        color: white !important;
+    }
+
+    /* Text Input */
+    .stTextInput input {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #ddd !important;
+        border-radius: 12px !important;
+    }
+
+    .stTextInput input:focus {
+        border: 2px solid #5865F2 !important;
+        box-shadow: 0 0 0 2px rgba(88,101,242,0.15) !important;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
 
 
-# -----------------------------
-# HOME PAGE STYLE
-# -----------------------------
+# -----------------------------------
+# HOME PAGE BACKGROUND
+# -----------------------------------
 def style_background_home():
-    st.markdown(
-        """
-        <style>
-
-        .stApp {
-            background-color: #5856F2 !important;
-        }
-
-        div[data-testid="stColumn"] {
-            background-color: #E0E3FF !important;
-            padding: 2.5rem !important;
-            border-radius: 2rem !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <style>
+    .stApp {
+        background-color: #5856F2 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
-# -----------------------------
-# DASHBOARD PAGE STYLE
-# -----------------------------
+# -----------------------------------
+# DASHBOARD BACKGROUND
+# -----------------------------------
 def style_background_dashboard():
-    st.markdown(
-        """
-        <style>
-
-        .stApp {
-            background-color: #E0E3FF !important;
-        }
-
-        /* Input fields */
-        .stTextInput input {
-            background-color: white !important;
-            color: black !important;
-            border: 1px solid #ddd !important;
-            border-radius: 12px !important;
-        }
-
-        .stTextInput input::placeholder {
-            color: #777 !important;
-        }
-
-        .stTextInput input:focus {
-            border: 2px solid #5865F2 !important;
-            box-shadow: 0 0 0 2px rgba(88,101,242,0.15) !important;
-        }
-
-        [data-testid="stTextInput"] {
-            background: transparent !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <style>
+    .stApp {
+        background-color: #E0E3FF !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
-# -----------------------------
-# IMPORTANT:
-# Call order should be:
-#
-# style_base_layout()
-# style_background_home()
-#
-# OR
-#
-# style_base_layout()
-# style_background_dashboard()
-#
-# -----------------------------
+# -----------------------------------
+# EXAMPLE USAGE
+# -----------------------------------
+
+style_base_layout()
+style_background_dashboard()
+
+st.markdown("""
+<div class="popup-box">
+
+    <div class="popup-title">
+        <h2>Enroll in Subject</h2>
+    </div>
+
+    <div class="normal-text">
+        <p>Enter the subject code provided by your teacher to enroll</p>
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
+
+st.text_input("Subject Code", placeholder="Eg. CS101")
+
+st.button("Enroll now")
