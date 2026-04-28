@@ -113,3 +113,13 @@ button[kind="tertiary"] {
 button:hover {
     transform: scale(1.05);
 }
+
+button *,
+button svg,
+button span,
+button p,
+button div {
+    color: white !important;
+    fill: white !important;
+    stroke: white !important;
+}

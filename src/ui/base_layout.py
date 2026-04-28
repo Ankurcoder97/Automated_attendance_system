@@ -43,17 +43,16 @@ def style_background_dashboard():
                 color: #111111 !important;
             }
 
-            .stApp,
             .stApp label,
             .stApp p,
-            .stApp span,
-            .stApp div,
             .stApp [data-testid="stMarkdownContainer"],
             .stApp [data-testid="stMarkdownContainer"] p,
-            .stApp [data-testid="stMarkdownContainer"] span,
             .stApp [data-testid="stWidgetLabel"],
-            .stApp [data-testid="stWidgetLabel"] * {
-                color: #111111;
+            .stApp [data-testid="stWidgetLabel"] *,
+            .stApp [data-testid="stCameraInput"] label,
+            .stApp [data-testid="stFileUploaderDropzoneInstructions"],
+            .stApp [data-testid="stFileUploaderDropzoneInstructions"] * {
+                color: #111111 !important;
             }
         </style>
         """,
