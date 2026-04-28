@@ -43,8 +43,8 @@ def style_base_layout():
 # asdasd
     st.markdown("""
         <style>
-        # @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&display=swap');
-        # @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
                 
          /* Hide Top Bar of streamlit */
@@ -77,7 +77,7 @@ def style_base_layout():
             }
                 
 
-            button{
+            button [kind="primary"]{
                 border-radius: 1.5rem !important;
                 background-color: #5865F2 !important;
                 color: white !important;
