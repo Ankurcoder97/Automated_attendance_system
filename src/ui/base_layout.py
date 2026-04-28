@@ -77,14 +77,13 @@ def style_base_layout():
             }
 
             div.stButton > button {
-                border-radius: 1.5rem !important;
-                background-color: #5865F2 !important;
-                color: white !important;
-                padding: 0.6rem 1.5rem !important;
-                border: none !important;
-                font-family: Arial, sans-serif !important;
-                font-weight: 600 !important;
-            }
+            border-radius: 1rem !important;
+            background-color: #5865F2 !important;
+            color: white !important;
+            border: none !important;
+            font-weight: 600 !important;
+            min-height: 45px !important;
+        }
 
         </style>
     """, unsafe_allow_html=True)
