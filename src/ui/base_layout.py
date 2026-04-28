@@ -9,8 +9,12 @@ def style_background_home():
                 background: #5865F2 !important;
             }
 
-            /* Card style for each column */
-            div[data-testid="column"] {
+            /* Card styling for student + teacher sections */
+            div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stHorizontalBlock"]) {
+                background-color: transparent !important;
+            }
+
+            div[data-testid="column"] > div {
                 background-color: #E0E3FF !important;
                 padding: 2.5rem !important;
                 border-radius: 3rem !important;
