@@ -4,6 +4,7 @@
 :root {
     --snap-display-font: "Climate Crisis", "Arial Black", "Impact", sans-serif;
     --snap-body-font: "Outfit", "Trebuchet MS", "Segoe UI", sans-serif;
+    --snap-ink: #111111;
 }
 
 /* Hide Streamlit chrome */
@@ -60,6 +61,7 @@ p,
 .snap-h3,
 .snap-h4 {
     margin-top: 0 !important;
+    color: var(--snap-ink);
 }
 
 .snap-h3 {

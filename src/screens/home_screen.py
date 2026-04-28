@@ -13,14 +13,14 @@ def home_screen():
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
-        render_heading("I'm Student", level=3, color="#FFFFFF")
+        render_heading("I'm Student", level=3, color="#111111")
         st.image("https://i.ibb.co/844D9Lrt/mascot-student.png", width=120)
         if st.button('Student Portal', type='primary', icon=':material/arrow_outward:', icon_position='right'):
             st.session_state['login_type']='student'
             st.rerun()
 
     with col2:
-        render_heading("I'm Teacher", level=3, color="#FFFFFF")
+        render_heading("I'm Teacher", level=3, color="#111111")
         st.image("https://i.ibb.co/CsmQQV6X/mascot-prof.png", width=145)
         if st.button('Teacher Portal', type='primary', icon=':material/arrow_outward:', icon_position='right'):
             st.session_state['login_type']='teacher'

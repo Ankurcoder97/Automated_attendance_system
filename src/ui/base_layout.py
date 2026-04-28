@@ -40,6 +40,20 @@ def style_background_dashboard():
         <style>
             .stApp {
                 background: #E0E3FF !important;
+                color: #111111 !important;
+            }
+
+            .stApp,
+            .stApp label,
+            .stApp p,
+            .stApp span,
+            .stApp div,
+            .stApp [data-testid="stMarkdownContainer"],
+            .stApp [data-testid="stMarkdownContainer"] p,
+            .stApp [data-testid="stMarkdownContainer"] span,
+            .stApp [data-testid="stWidgetLabel"],
+            .stApp [data-testid="stWidgetLabel"] * {
+                color: #111111;
             }
         </style>
         """,
