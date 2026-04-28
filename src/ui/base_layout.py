@@ -1,114 +1,112 @@
 import streamlit as st
 
 
+
 def style_background_home():
+
     st.markdown("""
         <style>
 
-            .stApp {
-                background: #5865F2 !important;
-            }
+                .stApp {
+                    background: #5865F2 !important;
+                }
 
-            /* Card styling for student + teacher sections */
-            div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stHorizontalBlock"]) {
-                background-color: transparent !important;
-            }
+                .stApp div[data-testid="stColumn"]{
+                    background-color:#E0E3FF !important;
+                    padding:2.5rem !important;
+                    border-radius: 5rem !important;
+                    }
+        </style>  
 
-            div[data-testid="column"] > div {
-                background-color: #E0E3FF !important;
-                padding: 2.5rem !important;
-                border-radius: 3rem !important;
-                text-align: center !important;
-            }
-
-        </style>
-    """, unsafe_allow_html=True)
-
+                """
+            ,unsafe_allow_html=True)
+    
 
 def style_background_dashboard():
+
     st.markdown("""
         <style>
 
-            .stApp {
-                background: #E0E3FF !important;
-            }
+                .stApp {
+                    background: #E0E3FF !important;
+                }
 
-        </style>
-    """, unsafe_allow_html=True)
+        </style>  
 
+                """
+            ,unsafe_allow_html=True)
+    
+
+    
 
 def style_base_layout():
+# asdasd
     st.markdown("""
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
-            /* Optional: safer to remove if font issue happens */
-            @import url('https://fonts.googleapis.com/css2?family=Climate+Crisis&display=swap');
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
-            /* Hide Streamlit default menu/footer/header */
+                
+         /* Hide Top Bar of streamlit */
+                
             #MainMenu, footer, header {
                 visibility: hidden;
             }
-
-            /* Main page spacing */
+                
             .block-container {
-                padding-top: 1.5rem !important;
-                padding-bottom: 1rem !important;
+                padding-top:1.5rem !important;    
             }
 
-            /* Stronger heading selectors for deployment */
-
-            div[data-testid="stMarkdownContainer"] h1 {
+            h1 {
                 font-family: 'Climate Crisis', sans-serif !important;
                 font-size: 3.5rem !important;
-                line-height: 1.1 !important;
-                margin-bottom: 0rem !important;
-                color: white !important;
-                text-align: center !important;
+                line-height:1.1 1important;
+                margin-bottom:0rem !important;
             }
+                
 
-            div[data-testid="stMarkdownContainer"] h2 {
+            h2 {
                 font-family: 'Climate Crisis', sans-serif !important;
                 font-size: 2rem !important;
-                line-height: 1 !important;
-                margin-bottom: 0rem !important;
-                color: black !important;
-                text-align: center !important;
+                line-height:0.9 !important;
+                margin-bottom:0rem !important;
             }
-
-            div[data-testid="stMarkdownContainer"] h3,
-            div[data-testid="stMarkdownContainer"] h4,
-            div[data-testid="stMarkdownContainer"] p,
-            div[data-testid="stMarkdownContainer"] span {
-                font-family: 'Outfit', sans-serif !important;
-                color: black !important;
+                
+            h3, h4, p {
+                font-family: 'Outfit', sans-serif;    
             }
+                
 
-            /* Safe button styling */
-
-            div.stButton > button {
-                border-radius: 1rem !important;
+            button{
+                border-radius: 1.5rem !important;
                 background-color: #5865F2 !important;
                 color: white !important;
+                padding: 10px 20px !important;
                 border: none !important;
-                font-weight: 600 !important;
-                min-height: 45px !important;
                 transition: transform 0.25s ease-in-out !important;
-            }
+                }
 
-            button[kind="secondary"] {
+            button[kind="secondary"]{
+                border-radius: 1.5rem !important;
                 background-color: #EB459E !important;
                 color: white !important;
-            }
+                padding: 10px 20px !important;
+                border: none !important;
+                transition: transform 0.25s ease-in-out !important;
+                }
 
-            button[kind="tertiary"] {
+            button[kind="tertiary"]{
+                border-radius: 1.5rem !important;
                 background-color: black !important;
                 color: white !important;
-            }
+                padding: 10px 20px !important;
+                border: none !important;
+                transition: transform 0.25s ease-in-out !important;
+                }
 
-            button:hover {
-                transform: scale(1.05);
-            }
+            button:hover{
+                transform :scale(1.05)}
+        </style>  
 
-        </style>
-    """, unsafe_allow_html=True)
+                """
+            ,unsafe_allow_html=True)
