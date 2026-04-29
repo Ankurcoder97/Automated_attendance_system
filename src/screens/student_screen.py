@@ -122,6 +122,8 @@ def student_screen():
         st.session_state.student_registration_open = False
     if 'student_registration_photo' not in st.session_state:
         st.session_state.student_registration_photo = None
+    if 'student_face_scan_status' not in st.session_state:
+        st.session_state.student_face_scan_status = None
 
     photo_source = st.camera_input("Position your face in the center")
 
@@ -135,15 +137,18 @@ def student_screen():
             if num_faces == 0:
                 st.session_state.student_registration_open = False
                 st.session_state.student_registration_photo = None
+                st.session_state.student_face_scan_status = 'no_face'
                 st.warning('Face not found!')
             elif num_faces >1:
                 st.session_state.student_registration_open = False
                 st.session_state.student_registration_photo = None
+                st.session_state.student_face_scan_status = 'multiple_faces'
                 st.warning('Multiple faces found')
             else:
+                st.session_state.student_registration_photo = photo_bytes
                 if detected:
                     st.session_state.student_registration_open = False
-                    st.session_state.student_registration_photo = None
+                    st.session_state.student_face_scan_status = 'recognized'
                     student_id = list(detected.keys())[0]
                     all_students = get_all_students()
                     student = next((s for s in all_students if s['student_id']==student_id), None)
@@ -156,11 +161,25 @@ def student_screen():
                         time.sleep(1)
                         st.rerun()
                 else:
+                    st.session_state.student_face_scan_status = 'unrecognized'
                     st.session_state.student_registration_open = True
-                    st.session_state.student_registration_photo = photo_bytes
+
+    if st.session_state.student_face_scan_status == 'unrecognized':
+        st.info('Face not recognized! You might be a new student!')
+    elif st.session_state.student_face_scan_status == 'recognized':
+        st.caption('Face matched an existing profile. If this is incorrect, you can still register as a new student below.')
+
+    can_offer_registration = (
+        st.session_state.student_registration_photo is not None
+        and st.session_state.student_face_scan_status in {'recognized', 'unrecognized'}
+    )
+
+    if can_offer_registration and not st.session_state.student_registration_open:
+        if st.button('Register as New Student', type='secondary', width='stretch'):
+            st.session_state.student_registration_open = True
+            st.rerun()
 
     if st.session_state.student_registration_open:
-        st.info('Face not recognized! You might be a new student!')
         with st.container(border=True):
             render_heading('Register new Profile', level=2)
             new_name = st.text_input("Enter your name", placeholder='E.g. Ankur Banerjee')
@@ -201,6 +220,7 @@ def student_screen():
                                 train_classifier()
                                 st.session_state.student_registration_open = False
                                 st.session_state.student_registration_photo = None
+                                st.session_state.student_face_scan_status = None
                                 st.session_state.is_logged_in = True
                                 st.session_state.user_role = 'student'
                                 st.session_state.student_data = response_data[0]
