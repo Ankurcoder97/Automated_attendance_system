@@ -147,13 +147,12 @@ def student_screen():
             else:
                 st.session_state.student_registration_photo = photo_bytes
                 if detected:
-                    st.session_state.student_registration_open = False
                     st.session_state.student_face_scan_status = 'recognized'
                     student_id = list(detected.keys())[0]
                     all_students = get_all_students()
                     student = next((s for s in all_students if s['student_id']==student_id), None)
 
-                    if student:
+                    if student and not st.session_state.student_registration_open:
                         st.session_state.is_logged_in = True
                         st.session_state.user_role = 'student'
                         st.session_state.student_data = student
