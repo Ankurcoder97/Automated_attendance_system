@@ -166,7 +166,7 @@ def student_screen():
     if st.session_state.student_face_scan_status == 'unrecognized':
         st.info('Face not recognized! You might be a new student!')
     elif st.session_state.student_face_scan_status == 'recognized':
-        st.caption('Face matched an existing profile. If this is incorrect, you can still register as a new student below.')
+        st.caption("Your Face doesn't match with existing Profile ,You might be a new Student🧐🧐")
 
     can_offer_registration = (
         st.session_state.student_registration_photo is not None
