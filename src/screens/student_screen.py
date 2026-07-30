@@ -173,10 +173,10 @@ def student_screen():
         and st.session_state.student_face_scan_status in {'recognized', 'unrecognized'}
     )
 
-    # if can_offer_registration and not st.session_state.student_registration_open:
-    #     if st.button('Register as New Student', type='secondary', width='stretch'):
-    #         st.session_state.student_registration_open = True
-    #         st.rerun()
+    if can_offer_registration and not st.session_state.student_registration_open:
+        if st.button('Register as New Student', type='secondary', width='stretch'):
+            st.session_state.student_registration_open = True
+            st.rerun()
 
     if st.session_state.student_registration_open:
         with st.container(border=True):
