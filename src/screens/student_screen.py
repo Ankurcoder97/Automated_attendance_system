@@ -1,6 +1,7 @@
 import streamlit as st
+from io import BytesIO
 
-from src.ui.base_layout import style_background_dashboard, style_base_layout
+from src.ui.base_layout import render_heading, style_background_dashboard, style_base_layout
 
 from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
@@ -21,7 +22,7 @@ def student_dashboard():
     with c1:
         header_dashboard()
     with c2:
-        st.subheader(f"""Welcome, {student_data['name']} """)
+        render_heading(f"Welcome, {student_data['name']}", level=3)
         if st.button("Logout", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
             st.session_state['is_logged_in'] = False
             del st.session_state.student_data 
@@ -32,7 +33,7 @@ def student_dashboard():
 
     c1, c2 =st.columns(2)
     with c1:
-        st.header('Your Enrolled Subjects')
+        render_heading('Your Enrolled Subjects', level=2)
     with c2:
         if st.button('Enroll in Subject', type='primary', width='stretch'):
             enroll_dialog()
@@ -63,13 +64,20 @@ def student_dashboard():
     for i, sub_node in enumerate(subjects):
         sub = sub_node['subjects']
         sid = sub['subject_id']
+        subject_name = sub['name']
 
 
         stats = stats_map.get(sid,{"total":0, "attended": 0} )
-        def unenroll_button():
-                if st.button("Unenroll from tihs course", type='tertiary', width='stretch', icon=':material/delete_forever:'):
-                    unenroll_student_to_subject(student_id, sid)
-                    st.toast(f'Unenrolled from {sub['name']} successfully!')
+        def unenroll_button(subject_id=sid, button_subject_name=subject_name):
+                if st.button(
+                    "Unenroll from this course",
+                    type='tertiary',
+                    width='stretch',
+                    icon=':material/delete_forever:',
+                    key=f"unenroll_{student_id}_{subject_id}",
+                ):
+                    unenroll_student_to_subject(student_id, subject_id)
+                    st.toast(f"Unenrolled from {button_subject_name} successfully!")
                     st.rerun()
 
         with cols[i % 2]:
@@ -106,45 +114,76 @@ def student_screen():
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.header('Login using FaceID', text_alignment='center')
+    render_heading('Login using FaceID', level=2, align='center')
     st.space()
     st.space()
-    
-    show_registration = False
+
+    if 'student_registration_open' not in st.session_state:
+        st.session_state.student_registration_open = False
+    if 'student_registration_photo' not in st.session_state:
+        st.session_state.student_registration_photo = None
+    if 'student_face_scan_status' not in st.session_state:
+        st.session_state.student_face_scan_status = None
+
     photo_source = st.camera_input("Position your face in the center")
 
     if photo_source:
+        photo_bytes = photo_source.getvalue()
         img = np.array(Image.open(photo_source))
 
         with st.spinner('AI is scanning..'):
             detected, all_ids, num_faces = predict_attendance(img)
 
             if num_faces == 0:
+                st.session_state.student_registration_open = False
+                st.session_state.student_registration_photo = None
+                st.session_state.student_face_scan_status = 'no_face'
                 st.warning('Face not found!')
             elif num_faces >1:
+                st.session_state.student_registration_open = False
+                st.session_state.student_registration_photo = None
+                st.session_state.student_face_scan_status = 'multiple_faces'
                 st.warning('Multiple faces found')
             else:
+                st.session_state.student_registration_photo = photo_bytes
                 if detected:
+                    st.session_state.student_face_scan_status = 'recognized'
                     student_id = list(detected.keys())[0]
                     all_students = get_all_students()
                     student = next((s for s in all_students if s['student_id']==student_id), None)
 
-                    if student:
+                    if student and not st.session_state.student_registration_open:
                         st.session_state.is_logged_in = True
                         st.session_state.user_role = 'student'
                         st.session_state.student_data = student
-                        st.toast(f'Welcome Back {student['name']}')
+                        st.toast(f"Welcome Back {student['name']}")
                         time.sleep(1)
                         st.rerun()
                 else:
-                    st.info('Face not recognized! You might be a new student!')
-                    show_registration = True
-    if show_registration:
-        with st.container(border=True):
-            st.header('Register new Profile')
-            new_name = st.text_input("Enter your name", placeholder='E.g. Hamza Rizvi')
+                    st.session_state.student_face_scan_status = 'unrecognized'
+                    st.session_state.student_registration_open = True
 
-            st.subheader('Optional : Voice Enrollment')
+    if st.session_state.student_face_scan_status == 'unrecognized':
+        st.info('Face not recognized! You might be a new student!')
+    # elif st.session_state.student_face_scan_status == 'recognized':
+    #     st.caption("Your Face doesn't match with existing Profile ,You might be a new Student🧐🧐")
+
+    can_offer_registration = (
+        st.session_state.student_registration_photo is not None
+        and st.session_state.student_face_scan_status in {'recognized', 'unrecognized'}
+    )
+
+    if can_offer_registration and not st.session_state.student_registration_open:
+        if st.button('Register as New Student', type='secondary', width='stretch'):
+            st.session_state.student_registration_open = True
+            st.rerun()
+
+    if st.session_state.student_registration_open:
+        with st.container(border=True):
+            render_heading('Register new Profile', level=2)
+            new_name = st.text_input("Enter your name", placeholder='E.g. Ankur Banerjee')
+
+            render_heading('Optional : Voice Enrollment', level=3)
             st.info("Enroll your for voice only attendance")
 
 
@@ -158,7 +197,14 @@ def student_screen():
             if st.button('Create Account', type='primary'):
                 if new_name:
                     with st.spinner('Creating profile..'):
-                        img = np.array(Image.open(photo_source))
+                        saved_photo = st.session_state.student_registration_photo
+
+                        if not saved_photo:
+                            st.error('Please capture your photo again before creating an account.')
+                            footer_dashboard()
+                            return
+
+                        img = np.array(Image.open(BytesIO(saved_photo)))
                         encodings= get_face_embeddings(img)
                         if encodings:
                             face_emb = encodings[0].tolist()
@@ -171,6 +217,9 @@ def student_screen():
 
                             if response_data:
                                 train_classifier()
+                                st.session_state.student_registration_open = False
+                                st.session_state.student_registration_photo = None
+                                st.session_state.student_face_scan_status = None
                                 st.session_state.is_logged_in = True
                                 st.session_state.user_role = 'student'
                                 st.session_state.student_data = response_data[0]
