@@ -22,6 +22,7 @@ from src.database.config import supabase
 
 
 from src.components.dialog_voice_attendance import voice_attendance_dialog
+from src.screens.student_analytics import student_analytics_screen
 def teacher_screen():
 
     style_background_dashboard()
@@ -55,7 +56,7 @@ def teacher_dashboard():
 
     if "current_teacher_tab" not in st.session_state:
         st.session_state.current_teacher_tab = 'take_attendance'
-    tab1, tab2, tab3 = st.columns(3)
+    tab1, tab2, tab3, tab4 = st.columns(4)
 
 
     with tab1:
@@ -76,6 +77,12 @@ def teacher_dashboard():
             st.session_state.current_teacher_tab = 'attendance_records'
             st.rerun()
 
+    with tab4:
+        type4 = "primary" if st.session_state.current_teacher_tab == 'student_analytics' else "tertiary"
+        if st.button('Student Analytics',type=type4, width='stretch', icon=':material/monitoring:'):
+            st.session_state.current_teacher_tab = 'student_analytics'
+            st.rerun()
+
 
     st.divider()
 
@@ -85,6 +92,8 @@ def teacher_dashboard():
         teacher_tab_manage_subjects()
     if st.session_state.current_teacher_tab == "attendance_records":
         teacher_tab_attendance_records()
+    if st.session_state.current_teacher_tab == "student_analytics":
+        student_analytics_screen(teacher_data['teacher_id'])
 
     
 
@@ -181,7 +190,8 @@ def teacher_tab_take_attendance():
                             'student_id': student['student_id'],
                             'subject_id': selected_subject_id,
                             'timestamp': current_timestamp,
-                            'is_present': bool(is_present)
+                            'is_present': bool(is_present),
+                            'attendance_method': 'face'
                         })
 
                 attendance_result_dialog(pd.DataFrame(results), attendance_to_log)
