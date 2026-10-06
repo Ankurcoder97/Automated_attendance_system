@@ -81,7 +81,13 @@ def live_classroom_panel(teacher_id, selected_subject_id):
         mode=WebRtcMode.SENDRECV,
         video_processor_factory=lambda: processor,
         media_stream_constraints={"video": True, "audio": False},
+        rtc_configuration=_rtc_configuration(),
         async_processing=True,
+    )
+    st.caption(
+        "If the camera stays at 0:00, allow camera access and configure "
+        "TURN_SERVER_URL, TURN_SERVER_USERNAME, and TURN_SERVER_CREDENTIAL in "
+        "Streamlit secrets; some networks block direct WebRTC connections."
     )
 
     if st.button("Refresh Live Stats", width="stretch"):
@@ -96,6 +102,24 @@ def _ensure_live_state():
         st.session_state.live_class_session = None
     if "live_class_processor" not in st.session_state:
         st.session_state.live_class_processor = None
+
+
+def _rtc_configuration():
+    ice_servers = [
+        {"urls": ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}
+    ]
+    turn_url = st.secrets.get("TURN_SERVER_URL")
+    if turn_url:
+        turn_server = {"urls": turn_url}
+        turn_username = st.secrets.get("TURN_SERVER_USERNAME")
+        turn_credential = st.secrets.get("TURN_SERVER_CREDENTIAL")
+        if turn_username:
+            turn_server["username"] = turn_username
+        if turn_credential:
+            turn_server["credential"] = turn_credential
+        ice_servers.append(turn_server)
+
+    return {"iceServers": ice_servers}
 
 
 def _render_live_metrics(processor):
