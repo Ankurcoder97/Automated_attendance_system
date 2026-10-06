@@ -102,17 +102,8 @@ def get_student_attendance(student_id):
 
 
 def create_attendance(logs):
-    try:
-        response = supabase.table('attendance_logs').insert(logs).execute()
-        return response.data
-    except Exception:
-        optional_fields = {"attendance_method", "recognition_method", "method", "session_id"}
-        cleaned_logs = [
-            {key: value for key, value in log.items() if key not in optional_fields}
-            for log in logs
-        ]
-        response = supabase.table('attendance_logs').insert(cleaned_logs).execute()
-        return response.data
+    response = supabase.table('attendance_logs').insert(logs).execute()
+    return response.data
 
 
 def create_attendance_once(log):

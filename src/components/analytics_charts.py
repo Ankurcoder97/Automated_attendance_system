@@ -36,14 +36,27 @@ def attendance_distribution_charts(logs_df):
         st.caption("Present vs Absent")
         st.bar_chart(status_counts, x="Status", y="Count", color="Status")
 
-    method_logs = logs_df.dropna(subset=["attendance_method"])
+    method_logs = logs_df.copy()
+    method_logs["Attendance Method"] = (
+        method_logs["attendance_method"]
+        .fillna("unknown")
+        .replace(
+            {
+                "face": "Face",
+                "voice": "Voice",
+                "live_face": "Live face",
+                "unknown": "Unknown / legacy",
+            }
+        )
+    )
     with c2:
-        st.caption("Face vs Voice Attendance")
-        if method_logs.empty:
-            st.info("Data not available: attendance_logs.attendance_method is not stored yet.")
-        else:
-            method_counts = method_logs.groupby("attendance_method").size().reset_index(name="Count")
-            st.bar_chart(method_counts, x="attendance_method", y="Count", color="attendance_method")
+        st.caption("Attendance Method")
+        method_counts = (
+            method_logs.groupby("Attendance Method")
+            .size()
+            .reset_index(name="Count")
+        )
+        st.bar_chart(method_counts, x="Attendance Method", y="Count", color="Attendance Method")
 
 
 def subject_attendance_chart(subject_summary):
