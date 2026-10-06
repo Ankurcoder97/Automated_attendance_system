@@ -9,6 +9,7 @@ from src.database.db import check_teacher_exists, create_teacher, teacher_login,
 from src.components.dialog_create_subject import create_subject_dialog
 from src.components.dialog_share_subject import share_subject_dialog
 from src.components.dialog_add_photo import add_photos_dialog
+from src.components.live_classroom import live_classroom_panel
 
 from src.pipelines.face_pipeline import predict_attendance
 from src.components.dialog_attendance_results import attendance_result_dialog
@@ -102,7 +103,7 @@ def teacher_dashboard():
 
 def teacher_tab_take_attendance():
     teacher_id = st.session_state.teacher_data['teacher_id']
-    render_heading('Take AI Attendance', level=2)
+    render_heading('Live AI Attendance', level=2)
 
 
     if 'attendance_images' not in st.session_state:
@@ -122,12 +123,21 @@ def teacher_tab_take_attendance():
         selected_subject_label = st.selectbox('Select Subject', options=list(subject_options.keys()))
 
     with col2:
-        if st.button('Add Photos', type='primary', icon=':material/photo_prints:', width='stretch'):
+        if st.button('Legacy Photo Attendance', type='secondary', icon=':material/photo_prints:', width='stretch'):
             add_photos_dialog()
 
     selected_subject_id = subject_options[selected_subject_label]
 
     st.divider()
+
+    live_classroom_panel(teacher_id, selected_subject_id)
+
+    with st.expander("Legacy photo attendance", expanded=bool(st.session_state.attendance_images)):
+        _legacy_photo_attendance(selected_subject_id)
+
+
+def _legacy_photo_attendance(selected_subject_id):
+    st.caption("Kept for compatibility. The live class flow above is the primary attendance workflow.")
 
     if st.session_state.attendance_images:
         render_heading('Added Photos', level=2)
@@ -261,7 +271,7 @@ def teacher_tab_attendance_records():
         ts = r.get('timestamp')
 
         data.append({
-            "ts_group": ts.split(".")[0] if ts else None,
+            "ts_group": r.get("session_id") or (ts.split(".")[0] if ts else None),
             "Time": datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N'A",
             "Subject": r['subjects']['name'],
             "Subject Code":r['subjects']['subject_code'],

@@ -1,4 +1,7 @@
 streamlit
+streamlit-webrtc
+opencv-python-headless
+av
 # Utilitites 
 numpy
 pandas

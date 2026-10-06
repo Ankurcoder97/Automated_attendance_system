@@ -1,5 +1,6 @@
 from src.database.config import supabase
 import bcrypt
+from datetime import datetime
 
 
 
@@ -49,14 +50,14 @@ def create_subject(subject_code, name, section, teacher_id):
     return response.data
 
 def get_teacher_subjects(teacher_id):
-    response = supabase.table('subjects').select("*, subject_students(count), attendance_logs(timestamp)").eq("teacher_id", teacher_id).execute()
+    response = supabase.table('subjects').select("*, subject_students(count), attendance_logs(timestamp, session_id)").eq("teacher_id", teacher_id).execute()
     subjects = response.data
 
 
     for sub in subjects:
         sub['total_students'] = sub.get("subject_students", [{}])[0].get('count', 0) if sub.get('subject_students') else 0
         attendance = sub.get('attendance_logs', [])
-        unique_sessions = len(set(log['timestamp'] for log in attendance))
+        unique_sessions = len(set(log.get('session_id') or log.get('timestamp') for log in attendance))
         sub['total_classes'] = unique_sessions
 
 
@@ -93,7 +94,7 @@ def create_attendance(logs):
         response = supabase.table('attendance_logs').insert(logs).execute()
         return response.data
     except Exception:
-        optional_fields = {"attendance_method", "recognition_method", "method"}
+        optional_fields = {"attendance_method", "recognition_method", "method", "session_id"}
         cleaned_logs = [
             {key: value for key, value in log.items() if key not in optional_fields}
             for log in logs
@@ -101,6 +102,158 @@ def create_attendance(logs):
         response = supabase.table('attendance_logs').insert(cleaned_logs).execute()
         return response.data
 
+
+def create_attendance_once(log):
+    session_id = log.get("session_id")
+    student_id = log.get("student_id")
+    if session_id and student_id:
+        existing = (
+            supabase.table("attendance_logs")
+            .select("student_id")
+            .eq("session_id", session_id)
+            .eq("student_id", student_id)
+            .limit(1)
+            .execute()
+        )
+        if existing.data:
+            return existing.data
+    return create_attendance([log])
+
 def get_attendance_for_teacher(teacher_id):
     response = supabase.table('attendance_logs').select("*, subjects!inner(*)").eq('subjects.teacher_id', teacher_id).execute()
     return response.data
+
+
+def get_enrolled_students(subject_id):
+    response = (
+        supabase.table("subject_students")
+        .select("*, students(*)")
+        .eq("subject_id", subject_id)
+        .execute()
+    )
+    rows = []
+    for item in response.data or []:
+        student = item.get("students") or {}
+        if student:
+            rows.append(student)
+    return rows
+
+
+def create_class_session(subject_id, teacher_id):
+    data = {
+        "subject_id": subject_id,
+        "teacher_id": teacher_id,
+        "status": "running",
+    }
+    response = supabase.table("class_sessions").insert(data).execute()
+    return response.data[0] if response.data else None
+
+
+def end_class_session(session_id):
+    response = (
+        supabase.table("class_sessions")
+        .update({"status": "ended", "end_time": datetime.utcnow().replace(microsecond=0).isoformat() + "Z"})
+        .eq("id", session_id)
+        .execute()
+    )
+    return response.data
+
+
+def get_class_sessions_for_teacher(teacher_id, limit=20):
+    response = (
+        supabase.table("class_sessions")
+        .select("*, subjects!inner(*)")
+        .eq("teacher_id", teacher_id)
+        .order("start_time", desc=True)
+        .limit(limit)
+        .execute()
+    )
+    return response.data or []
+
+
+def upsert_student_analytics(row):
+    try:
+        response = (
+            supabase.table("student_analytics")
+            .upsert(row, on_conflict="student_id,subject_id,session_id")
+            .execute()
+        )
+        return response.data
+    except Exception:
+        return []
+
+
+def get_student_analytics_for_session(session_id):
+    try:
+        response = (
+            supabase.table("student_analytics")
+            .select("*, students(*)")
+            .eq("session_id", session_id)
+            .execute()
+        )
+        return response.data or []
+    except Exception:
+        return []
+
+
+def get_behaviour_events_for_session(session_id):
+    try:
+        response = (
+            supabase.table("behaviour_events")
+            .select("*, students(*)")
+            .eq("session_id", session_id)
+            .order("start_time")
+            .execute()
+        )
+        return response.data or []
+    except Exception:
+        return []
+
+
+def upsert_behaviour_event(student_id, subject_id, session_id, event_type, confidence, metadata):
+    open_event = (
+        supabase.table("behaviour_events")
+        .select("*")
+        .eq("student_id", student_id)
+        .eq("session_id", session_id)
+        .eq("event_type", event_type)
+        .is_("end_time", "null")
+        .limit(1)
+        .execute()
+    )
+    if open_event.data:
+        return open_event.data
+
+    data = {
+        "student_id": student_id,
+        "subject_id": subject_id,
+        "session_id": session_id,
+        "event_type": event_type,
+        "start_time": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        "confidence": confidence,
+        "metadata": metadata,
+    }
+    try:
+        response = supabase.table("behaviour_events").insert(data).execute()
+        return response.data
+    except Exception:
+        return []
+
+
+def end_behaviour_event(session_id, student_id, event_type, end_time, duration=None):
+    payload = {"end_time": end_time}
+    if duration is not None:
+        payload["duration"] = int(duration)
+    try:
+        response = (
+            supabase.table("behaviour_events")
+            .update(payload)
+            .eq("session_id", session_id)
+            .eq("student_id", student_id)
+            .eq("event_type", event_type)
+            .is_("end_time", "null")
+            .execute()
+        )
+        return response.data
+    except Exception:
+        return []
