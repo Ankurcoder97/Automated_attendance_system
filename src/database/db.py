@@ -50,19 +50,31 @@ def create_subject(subject_code, name, section, teacher_id):
     return response.data
 
 def get_teacher_subjects(teacher_id):
-    response = supabase.table('subjects').select("*, subject_students(count), attendance_logs(timestamp, session_id)").eq("teacher_id", teacher_id).execute()
-    subjects = response.data
-
+    try:
+        response = supabase.table('subjects').select('*').eq('teacher_id', teacher_id).execute()
+        subjects = response.data or []
+    except Exception:
+        return []
 
     for sub in subjects:
-        sub['total_students'] = sub.get("subject_students", [{}])[0].get('count', 0) if sub.get('subject_students') else 0
-        attendance = sub.get('attendance_logs', [])
-        unique_sessions = len(set(log.get('session_id') or log.get('timestamp') for log in attendance))
-        sub['total_classes'] = unique_sessions
+        subject_id = sub.get('subject_id')
 
+        try:
+            student_rows = supabase.table('subject_students').select('student_id').eq('subject_id', subject_id).execute()
+            sub['total_students'] = len(student_rows.data or [])
+        except Exception:
+            sub['total_students'] = 0
 
-        sub.pop('subject_student', None)
-        sub.pop('attendance_logs', None)
+        try:
+            attendance_rows = supabase.table('attendance_logs').select('session_id').eq('subject_id', subject_id).execute()
+            session_ids = {
+                row.get('session_id')
+                for row in (attendance_rows.data or [])
+                if row.get('session_id') is not None
+            }
+            sub['total_classes'] = len(session_ids)
+        except Exception:
+            sub['total_classes'] = 0
 
     return subjects
 
